@@ -1,9 +1,13 @@
-import { NextPage } from "next";
+import { Text } from "@chakra-ui/layout"
+import { NextPage } from "next"
+import Layout from "../components/Layout"
 
-const IndexPage: NextPage = () => (
-  <div>
-    <h1>Hello Next.js 👋</h1>
-  </div>
-);
+const IndexPage: NextPage = () => {
+  return (
+    <Layout>
+      <Text>Index Page</Text>
+    </Layout>
+  )
+}
 
-export default IndexPage;
+export default IndexPage
