@@ -1,44 +1,69 @@
-import { FormControl } from "@chakra-ui/form-control"
-import {
-  Box,
-  Button,
-  Divider,
-  FormLabel,
-  Heading,
-  Input,
-  Wrap,
-} from "@chakra-ui/react"
-import { NextPage } from "next"
+import { Button } from "@chakra-ui/button"
+import { Box, Flex } from "@chakra-ui/layout"
+import { Form, Formik } from "formik"
+import { useRouter } from "next/router"
+import { FC } from "react"
+import { InputField } from "../../components/InputField"
 import AuthLayout from "../../components/Layout/AuthLayout"
+import NextLink from "../../components/NextLink"
+import { MeDocument, MeQuery, useLoginMutation } from "../../generated/graphql"
+import { toErrorMap } from "../../utils/toErrorMap"
 
-const Login: NextPage = () => {
+export const Login: FC = () => {
+  const [login] = useLoginMutation()
+  const router = useRouter()
+
   return (
     <AuthLayout>
-      <Box>
-        <Box as="form" maxWidth="16rem">
-          <Heading align="center" marginBottom={4}>
-            Login
-          </Heading>
-          <Wrap>
-            <FormControl id="email" isRequired>
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
-            </FormControl>
-            <FormControl id="username" isRequired>
-              <FormLabel>Username</FormLabel>
-              <Input type="text" />
-            </FormControl>
-            <FormControl id="password" isRequired>
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-          </Wrap>
-          <Divider marginY={4} />
-          <Button colorScheme="orange" type="submit">
-            Login
-          </Button>
-        </Box>
-      </Box>
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        onSubmit={async (values, { setErrors }) => {
+          const response = await login({
+            variables: { options: values },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.login.user,
+                },
+              })
+            },
+          })
+          if (response.data?.login.errors) {
+            setErrors(toErrorMap(response.data.login.errors))
+          } else if (response.data?.login.user) {
+            // logged in
+            if (typeof router.query.next === "string") {
+              router.push(router.query.next)
+            } else {
+              router.push("/")
+            }
+          }
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <InputField name="email" label="Email" />
+            <Box mt={4}>
+              <InputField name="password" label="Password" type="password" />
+            </Box>
+            <Flex justifyContent="flex-end">
+              <Box mt={2}>
+                <NextLink href="/forgot-password">forgot password?</NextLink>
+              </Box>
+            </Flex>
+            <Button
+              type="submit"
+              colorScheme="orange"
+              mt={4}
+              isLoading={isSubmitting}
+            >
+              Login
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </AuthLayout>
   )
 }

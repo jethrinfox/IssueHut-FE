@@ -1,14 +1,17 @@
+import { ApolloProvider } from "@apollo/client"
 import { ChakraProvider, CSSReset } from "@chakra-ui/react"
-import ApolloClientProvider from "../ApolloClient"
+import { useApollo } from "../utils/ApolloClient"
 
 function MyApp({ Component, pageProps }: any) {
+  const store = useApollo(pageProps.initialApolloState)
+
   return (
-    <ApolloClientProvider>
+    <ApolloProvider client={store}>
       <ChakraProvider>
         <CSSReset />
         <Component {...pageProps} />
       </ChakraProvider>
-    </ApolloClientProvider>
+    </ApolloProvider>
   )
 }
 

@@ -1,44 +1,76 @@
-import { FormControl } from "@chakra-ui/form-control"
-import {
-  Box,
-  Button,
-  Divider,
-  FormLabel,
-  Heading,
-  Input,
-  Wrap,
-} from "@chakra-ui/react"
-import { NextPage } from "next"
+import { Button } from "@chakra-ui/button"
+import { Box, Flex } from "@chakra-ui/layout"
+import { Form, Formik } from "formik"
+import { useRouter } from "next/router"
+import { FC } from "react"
+import { InputField } from "../../components/InputField"
 import AuthLayout from "../../components/Layout/AuthLayout"
+import NextLink from "../../components/NextLink"
+import {
+  MeDocument,
+  MeQuery,
+  useRegisterMutation,
+} from "../../generated/graphql"
+import { toErrorMap } from "../../utils/toErrorMap"
 
-const Register: NextPage = () => {
+export const Register: FC = () => {
+  const [register] = useRegisterMutation()
+  const router = useRouter()
+
   return (
     <AuthLayout>
-      <Box>
-        <Box as="form" maxWidth="16rem">
-          <Heading align="center" marginBottom={4}>
-            Register
-          </Heading>
-          <Wrap>
-            <FormControl id="email" isRequired>
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
-            </FormControl>
-            <FormControl id="username" isRequired>
-              <FormLabel>Username</FormLabel>
-              <Input type="text" />
-            </FormControl>
-            <FormControl id="password" isRequired>
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-          </Wrap>
-          <Divider marginY={4} />
-          <Button colorScheme="orange" type="submit">
-            Register
-          </Button>
-        </Box>
-      </Box>
+      <Formik
+        initialValues={{ email: "", username: "", password: "" }}
+        onSubmit={async (values, { setErrors }) => {
+          const response = await register({
+            variables: { options: values },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.register.user,
+                },
+              })
+            },
+          })
+          if (response.data?.register.errors) {
+            setErrors(toErrorMap(response.data.register.errors))
+          } else if (response.data?.register.user) {
+            // logged in
+            if (typeof router.query.next === "string") {
+              router.push(router.query.next)
+            } else {
+              router.push("/")
+            }
+          }
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <InputField name="email" label="Email" type="email" />
+            <Box mt={4}>
+              <InputField name="username" label="Username" type="text" />
+            </Box>
+            <Box mt={4}>
+              <InputField name="password" label="Password" type="password" />
+            </Box>
+            <Flex justifyContent="flex-end">
+              <Box mt={2}>
+                <NextLink href="/forgot-password">forgot password?</NextLink>
+              </Box>
+            </Flex>
+            <Button
+              type="submit"
+              colorScheme="orange"
+              mt={4}
+              isLoading={isSubmitting}
+            >
+              Register
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </AuthLayout>
   )
 }

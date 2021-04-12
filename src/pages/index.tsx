@@ -1,11 +1,13 @@
-import { Text } from "@chakra-ui/layout"
+import { Center, Heading } from "@chakra-ui/layout"
 import { NextPage } from "next"
 import Layout from "../components/Layout"
 
 const IndexPage: NextPage = () => {
   return (
     <Layout>
-      <Text>Index Page</Text>
+      <Center marginTop="6rem">
+        <Heading>Index Page</Heading>
+      </Center>
     </Layout>
   )
 }
