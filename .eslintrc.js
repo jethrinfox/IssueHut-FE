@@ -22,6 +22,7 @@ module.exports = {
   rules: {
     "prettier/prettier": "error",
     "react/prop-types": "off",
+    "react/display-name": "off",
     "react/jsx-uses-react": "off", // only if using React version 17+
     "react/react-in-jsx-scope": "off", // only if using React version 17+
     "react-hooks/rules-of-hooks": "error", // if using hooks

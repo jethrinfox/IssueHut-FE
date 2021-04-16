@@ -1,18 +1,21 @@
-import { ApolloProvider } from "@apollo/client"
 import { ChakraProvider, CSSReset } from "@chakra-ui/react"
-import { useApollo } from "../utils/ApolloClient"
+import theme from "../utils/theme"
+import withApollo from "../utils/withApollo"
+import Head from "next/head"
 
 function MyApp({ Component, pageProps }: any) {
-  const store = useApollo(pageProps.initialApolloState)
-
   return (
-    <ApolloProvider client={store}>
-      <ChakraProvider>
+    <>
+      <Head>
+        <title>IssueHut ⛺</title>
+        <meta property="og:title" content="IssueHut ⛺" key="title" />
+      </Head>
+      <ChakraProvider theme={theme}>
         <CSSReset />
         <Component {...pageProps} />
       </ChakraProvider>
-    </ApolloProvider>
+    </>
   )
 }
 
-export default MyApp
+export default withApollo(MyApp)

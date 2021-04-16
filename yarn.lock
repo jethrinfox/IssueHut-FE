@@ -664,6 +664,21 @@
   dependencies:
     "@chakra-ui/utils" "1.5.1"
 
+"@chakra-ui/icon@1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icon/-/icon-1.1.6.tgz#ccad476148d7edd5c49f1621ea53f2ed01ec2c5e"
+  integrity sha512-BK1tQC9tmZw/YQQJX9KUOqJJUazj7UdHXwa+jPfa6fgwexhsVIMKqucc6FQhbUNG+HvVzcHy7lINEJcct+VqgQ==
+  dependencies:
+    "@chakra-ui/utils" "1.5.2"
+
+"@chakra-ui/icons@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.10.tgz#19fac3b73f574162a8e64fa086c3d0adff7a53fd"
+  integrity sha512-D93O7uQ07VjINd51gIRpd7kcMme/jTRtsefbuawYxmIbe6uDaNAIaYfDHM/lJPomdk/iaSXC68ESK6vyyfif+A==
+  dependencies:
+    "@chakra-ui/icon" "1.1.6"
+    "@types/react" "^17.0.0"
+
 "@chakra-ui/image@1.0.11":
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/@chakra-ui/image/-/image-1.0.11.tgz#de1ee15e81253ca0d71fc99a06a61d3bf749e8d5"
@@ -1016,6 +1031,15 @@
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@chakra-ui/utils/-/utils-1.5.1.tgz#a01fd14f6d948a13c2644cfa844f410299135ffc"
   integrity sha512-J8P9wA96Kaxu4oHh+8s1rEL2VABWK/io8sBck19eOXKfVXJ55KyVwGZTrsVID0No43b7WzJx6n/xsMKkn39Peg==
+  dependencies:
+    "@types/lodash.mergewith" "4.6.6"
+    css-box-model "1.2.1"
+    lodash.mergewith "4.6.2"
+
+"@chakra-ui/utils@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/utils/-/utils-1.5.2.tgz#48bcbaf4856bd9c1c877b69c7edc7cb767454dc9"
+  integrity sha512-oGBIx93b4bDHm6fpRZp6QQ5hJQOElVi2yI1/ptlSiCCSOKfyuqh8fu+PYMsinWXp44kmTQ4gfEhuRIY4Z/vhbg==
   dependencies:
     "@types/lodash.mergewith" "4.6.6"
     css-box-model "1.2.1"
@@ -1876,7 +1900,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.2":
+"@types/react@*", "@types/react@^17.0.0", "@types/react@^17.0.2":
   version "17.0.3"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.3.tgz#ba6e215368501ac3826951eef2904574c262cc79"
   integrity sha512-wYOUxIgs2HZZ0ACNiIayItyluADNbONl7kt8lkLjVK8IitMH5QMyAh75Fwhmo37r1m7L2JaFj03sIfxBVDvRAg==
@@ -4677,6 +4701,14 @@ isomorphic-fetch@^3.0.0:
     node-fetch "^2.6.1"
     whatwg-fetch "^3.4.1"
 
+isomorphic-unfetch@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/isomorphic-unfetch/-/isomorphic-unfetch-3.1.0.tgz#87341d5f4f7b63843d468438128cb087b7c3e98f"
+  integrity sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q==
+  dependencies:
+    node-fetch "^2.6.1"
+    unfetch "^4.2.0"
+
 isomorphic-ws@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
@@ -5321,6 +5353,13 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
+
+next-with-apollo@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/next-with-apollo/-/next-with-apollo-5.1.1.tgz#491e1112ba2ac1993cd669d610801c554b9ddd16"
+  integrity sha512-SqI+q4q8ib2YrRXhzVETTBKyk9zyCsHdfGdqCixVOZsnHMl/qsozNgw7/a5drGpsP3jAFQCbenAB3sYc6Gi04g==
+  dependencies:
+    isomorphic-unfetch "^3.0.0"
 
 next@latest:
   version "10.1.3"
@@ -7223,6 +7262,11 @@ unc-path-regex@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
   integrity sha1-5z3T17DXxe2G+6xrCufYxqadUPo=
+
+unfetch@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-4.2.0.tgz#7e21b0ef7d363d8d9af0fb929a5555f6ef97a3be"
+  integrity sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==
 
 universalify@^2.0.0:
   version "2.0.0"

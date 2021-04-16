@@ -10,7 +10,7 @@ const Layout: NextPage<LayoutProps> = ({ children }) => {
   return (
     <Box display="flex" minHeight="100vh" flexDir="column">
       <Header />
-      <Container flex="1" display="flex" flexDir="column">
+      <Container maxW="container.lg" flex="1" display="flex" flexDir="column">
         <Box>{children}</Box>
       </Container>
     </Box>

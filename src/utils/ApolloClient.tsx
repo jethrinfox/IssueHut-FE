@@ -10,6 +10,7 @@ function createApolloClient() {
     ssrMode: isServer(), // set to true for SSR
     link: new HttpLink({
       uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URI,
+      credentials: "include",
     }),
     cache: new InMemoryCache(),
     connectToDevTools: process.env.NODE_ENV === "development",
