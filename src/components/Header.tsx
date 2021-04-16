@@ -15,7 +15,9 @@ const Header: FC = ({ props }) => {
   const handleToggle = () => setShow(!show)
   const [logout, { loading: logoutFetching }] = useLogOutMutation()
   const apolloClient = useApolloClient()
-  const { data, loading } = useMeQuery()
+  const { data, loading } = useMeQuery({
+    skip: isServer(),
+  })
 
   const handleLogout = async () => {
     await logout()
@@ -54,9 +56,9 @@ const Header: FC = ({ props }) => {
       >
         <Flex align="center" justify="space-between">
           <MenuItems>Welcome {data?.me?.username}</MenuItems>
-          <Link mr={4} href="/create-issue">
+          <Link mr={4} href="/projects/add">
             <Button bg="transparent" border="1px">
-              Create Issue
+              Create Project
             </Button>
           </Link>
           <Button

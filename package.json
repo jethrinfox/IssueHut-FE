@@ -34,6 +34,7 @@
 	},
 	"dependencies": {
 		"@apollo/client": "^3.3.14",
+		"@chakra-ui/icons": "^1.0.10",
 		"@chakra-ui/react": "^1.5.0",
 		"@emotion/react": "^11",
 		"@emotion/styled": "^11",
@@ -41,6 +42,7 @@
 		"framer-motion": "^4",
 		"graphql": "^15.5.0",
 		"next": "latest",
+		"next-with-apollo": "^5.1.1",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1"
 	},

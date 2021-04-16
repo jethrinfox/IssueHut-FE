@@ -9,7 +9,7 @@ import NextLink from "../../components/NextLink"
 import { MeDocument, MeQuery, useLoginMutation } from "../../generated/graphql"
 import { toErrorMap } from "../../utils/toErrorMap"
 
-export const Login: FC = () => {
+export const LoginPage: FC = () => {
   const [login] = useLoginMutation()
   const router = useRouter()
 
@@ -68,4 +68,4 @@ export const Login: FC = () => {
   )
 }
 
-export default Login
+export default LoginPage
