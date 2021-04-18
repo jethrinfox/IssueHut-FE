@@ -1,0 +1,7 @@
+mutation UpdateProject($options: ProjectInput!, $projectId: Float!) {
+  updateProject(options: $options, projectId: $projectId) {
+    id
+    name
+    description
+  }
+}

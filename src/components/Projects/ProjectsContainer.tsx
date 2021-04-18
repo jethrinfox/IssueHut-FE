@@ -1,6 +1,7 @@
 import { PlusSquareIcon, StarIcon } from "@chakra-ui/icons"
 import {
   Box,
+  Button,
   Divider,
   Flex,
   Grid,
@@ -12,6 +13,7 @@ import {
 import Link from "next/link"
 import { FC } from "react"
 import { useProjectsQuery } from "../../generated/graphql"
+import NextLink from "../NextLink"
 
 // interface ProjectsContainerProps {
 // }
@@ -21,7 +23,8 @@ const ProjectsContainer: FC = () => {
 
   if (loading) {
     return (
-      <Grid templateColumns="repeat(5, 1fr)" gap={6}>
+      <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+        <Skeleton height="8rem" />
         <Skeleton height="8rem" />
         <Skeleton height="8rem" />
         <Skeleton height="8rem" />
@@ -42,7 +45,7 @@ const ProjectsContainer: FC = () => {
   }
 
   return (
-    <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+    <Grid my={8} templateColumns="repeat(4, 1fr)" gap={6}>
       {data.projects.map(({ id, name, description, updatedAt }) => (
         <Flex
           key={id}
@@ -52,21 +55,47 @@ const ProjectsContainer: FC = () => {
           borderRadius="lg"
           overflow="hidden"
           flexDir="column"
-          padding="2"
         >
-          <Heading as="h4" size="lg">
-            {name}
-          </Heading>
-          <Divider marginBottom="2" />
-          <Text>{description}</Text>
-          <Flex flex="1" alignItems="flex-end">
-            <Flex alignItems="center">
-              <StarIcon color="orange.500" />
-              <Box as="span" ml="2" color="gray.600" fontSize="sm">
-                {new Date(Number(updatedAt)).toLocaleDateString()}
-              </Box>
+          <NextLink
+            href={`/projects/view/${id}`}
+            as="a"
+            height="100%"
+            width="100%"
+            padding="2"
+            transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+            border="1px"
+            px="8px"
+            borderRadius="2px"
+            fontSize="14px"
+            fontWeight="semibold"
+            bg="#f5f6f7"
+            borderColor="#ccd0d5"
+            color="#4b4f56"
+            _hover={{ bg: "#ebedf0" }}
+            _active={{
+              bg: "#dddfe2",
+              transform: "scale(0.98)",
+              borderColor: "#bec3c9",
+            }}
+            _focus={{
+              boxShadow:
+                "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
+            }}
+          >
+            <Heading as="h4" size="md" isTruncated>
+              {name}
+            </Heading>
+            <Divider marginBottom="2" />
+            <Text>{description}</Text>
+            <Flex flex="1" alignItems="flex-end">
+              <Flex alignItems="center">
+                <StarIcon color="orange.500" />
+                <Box as="span" ml="2" color="gray.600" fontSize="sm">
+                  {new Date(Number(updatedAt)).toLocaleDateString()}
+                </Box>
+              </Flex>
             </Flex>
-          </Flex>
+          </NextLink>
         </Flex>
       ))}
       <Flex

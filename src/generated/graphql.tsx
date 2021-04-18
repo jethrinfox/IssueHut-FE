@@ -38,6 +38,7 @@ export type Issue = {
   description: Scalars["String"]
   priority: Scalars["String"]
   archived: Scalars["Boolean"]
+  listId: Scalars["Float"]
 }
 
 export type IssueInput = {
@@ -54,6 +55,7 @@ export type List = {
   updatedAt: Scalars["String"]
   name: Scalars["String"]
   archived: Scalars["Boolean"]
+  issues: Array<Issue>
 }
 
 export type Mutation = {
@@ -158,6 +160,10 @@ export type QueryIssueArgs = {
   issueId: Scalars["Int"]
 }
 
+export type QueryListsArgs = {
+  projectId: Scalars["Int"]
+}
+
 export type QueryListArgs = {
   listId: Scalars["Int"]
 }
@@ -184,9 +190,29 @@ export type UsernameInput = {
   password: Scalars["String"]
 }
 
+export type ListWithIssuesFragment = { __typename?: "List" } & {
+  issues: Array<
+    { __typename?: "Issue" } & Pick<
+      Issue,
+      | "id"
+      | "name"
+      | "description"
+      | "priority"
+      | "listId"
+      | "createdAt"
+      | "updatedAt"
+    >
+  >
+}
+
 export type RegularErrorFragment = { __typename?: "FieldError" } & Pick<
   FieldError,
   "field" | "message"
+>
+
+export type RegularListFragment = { __typename?: "List" } & Pick<
+  List,
+  "id" | "name" | "archived" | "createdAt" | "updatedAt"
 >
 
 export type RegularUserFragment = { __typename?: "User" } & Pick<
@@ -197,17 +223,6 @@ export type RegularUserFragment = { __typename?: "User" } & Pick<
 export type RegularUserResponseFragment = { __typename?: "UserResponse" } & {
   errors?: Maybe<Array<{ __typename?: "FieldError" } & RegularErrorFragment>>
   user?: Maybe<{ __typename?: "User" } & RegularUserFragment>
-}
-
-export type CreateProjectMutationVariables = Exact<{
-  options: ProjectInput
-}>
-
-export type CreateProjectMutation = { __typename?: "Mutation" } & {
-  createProject: { __typename?: "Project" } & Pick<
-    Project,
-    "id" | "name" | "description" | "createdAt"
-  >
 }
 
 export type LoginMutationVariables = Exact<{
@@ -231,6 +246,76 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: "Mutation" } & {
   register: { __typename?: "UserResponse" } & RegularUserResponseFragment
+}
+
+export type CreateListMutationVariables = Exact<{
+  name: Scalars["String"]
+  projectId: Scalars["Int"]
+}>
+
+export type CreateListMutation = { __typename?: "Mutation" } & {
+  createList: { __typename?: "List" } & Pick<List, "id" | "name" | "archived">
+}
+
+export type DeleteListMutationVariables = Exact<{
+  listId: Scalars["Int"]
+}>
+
+export type DeleteListMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "deleteList"
+>
+
+export type UpdateListMutationVariables = Exact<{
+  listId: Scalars["Int"]
+  name: Scalars["String"]
+  archived: Scalars["Boolean"]
+}>
+
+export type UpdateListMutation = { __typename?: "Mutation" } & {
+  updateList: { __typename?: "List" } & Pick<List, "id" | "name" | "archived">
+}
+
+export type CreateProjectMutationVariables = Exact<{
+  options: ProjectInput
+}>
+
+export type CreateProjectMutation = { __typename?: "Mutation" } & {
+  createProject: { __typename?: "Project" } & Pick<
+    Project,
+    "id" | "name" | "description" | "createdAt"
+  >
+}
+
+export type DeleteProjectMutationVariables = Exact<{
+  projectId: Scalars["Float"]
+}>
+
+export type DeleteProjectMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "deleteProject"
+>
+
+export type UpdateProjectMutationVariables = Exact<{
+  options: ProjectInput
+  projectId: Scalars["Float"]
+}>
+
+export type UpdateProjectMutation = { __typename?: "Mutation" } & {
+  updateProject: { __typename?: "Project" } & Pick<
+    Project,
+    "id" | "name" | "description"
+  >
+}
+
+export type ListsQueryVariables = Exact<{
+  projectId: Scalars["Int"]
+}>
+
+export type ListsQuery = { __typename?: "Query" } & {
+  lists: Array<
+    { __typename?: "List" } & RegularListFragment & ListWithIssuesFragment
+  >
 }
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>
@@ -263,6 +348,28 @@ export type ProjectsQuery = { __typename?: "Query" } & {
   >
 }
 
+export const ListWithIssuesFragmentDoc = gql`
+  fragment ListWithIssues on List {
+    issues {
+      id
+      name
+      description
+      priority
+      listId
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const RegularListFragmentDoc = gql`
+  fragment RegularList on List {
+    id
+    name
+    archived
+    createdAt
+    updatedAt
+  }
+`
 export const RegularErrorFragmentDoc = gql`
   fragment RegularError on FieldError {
     field
@@ -288,58 +395,6 @@ export const RegularUserResponseFragmentDoc = gql`
   ${RegularErrorFragmentDoc}
   ${RegularUserFragmentDoc}
 `
-export const CreateProjectDocument = gql`
-  mutation CreateProject($options: ProjectInput!) {
-    createProject(options: $options) {
-      id
-      name
-      description
-      createdAt
-    }
-  }
-`
-export type CreateProjectMutationFn = Apollo.MutationFunction<
-  CreateProjectMutation,
-  CreateProjectMutationVariables
->
-
-/**
- * __useCreateProjectMutation__
- *
- * To run a mutation, you first call `useCreateProjectMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateProjectMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
- *   variables: {
- *      options: // value for 'options'
- *   },
- * });
- */
-export function useCreateProjectMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateProjectMutation,
-    CreateProjectMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    CreateProjectMutation,
-    CreateProjectMutationVariables
-  >(CreateProjectDocument, options)
-}
-export type CreateProjectMutationHookResult = ReturnType<
-  typeof useCreateProjectMutation
->
-export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>
-export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<
-  CreateProjectMutation,
-  CreateProjectMutationVariables
->
 export const LoginDocument = gql`
   mutation Login($options: EmailInput!) {
     login(options: $options) {
@@ -479,6 +534,360 @@ export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<
   RegisterMutation,
   RegisterMutationVariables
+>
+export const CreateListDocument = gql`
+  mutation CreateList($name: String!, $projectId: Int!) {
+    createList(name: $name, projectId: $projectId) {
+      id
+      name
+      archived
+    }
+  }
+`
+export type CreateListMutationFn = Apollo.MutationFunction<
+  CreateListMutation,
+  CreateListMutationVariables
+>
+
+/**
+ * __useCreateListMutation__
+ *
+ * To run a mutation, you first call `useCreateListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createListMutation, { data, loading, error }] = useCreateListMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useCreateListMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateListMutation,
+    CreateListMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateListMutation, CreateListMutationVariables>(
+    CreateListDocument,
+    options,
+  )
+}
+export type CreateListMutationHookResult = ReturnType<
+  typeof useCreateListMutation
+>
+export type CreateListMutationResult = Apollo.MutationResult<CreateListMutation>
+export type CreateListMutationOptions = Apollo.BaseMutationOptions<
+  CreateListMutation,
+  CreateListMutationVariables
+>
+export const DeleteListDocument = gql`
+  mutation DeleteList($listId: Int!) {
+    deleteList(listId: $listId)
+  }
+`
+export type DeleteListMutationFn = Apollo.MutationFunction<
+  DeleteListMutation,
+  DeleteListMutationVariables
+>
+
+/**
+ * __useDeleteListMutation__
+ *
+ * To run a mutation, you first call `useDeleteListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteListMutation, { data, loading, error }] = useDeleteListMutation({
+ *   variables: {
+ *      listId: // value for 'listId'
+ *   },
+ * });
+ */
+export function useDeleteListMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteListMutation,
+    DeleteListMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<DeleteListMutation, DeleteListMutationVariables>(
+    DeleteListDocument,
+    options,
+  )
+}
+export type DeleteListMutationHookResult = ReturnType<
+  typeof useDeleteListMutation
+>
+export type DeleteListMutationResult = Apollo.MutationResult<DeleteListMutation>
+export type DeleteListMutationOptions = Apollo.BaseMutationOptions<
+  DeleteListMutation,
+  DeleteListMutationVariables
+>
+export const UpdateListDocument = gql`
+  mutation UpdateList($listId: Int!, $name: String!, $archived: Boolean!) {
+    updateList(listId: $listId, name: $name, archived: $archived) {
+      id
+      name
+      archived
+    }
+  }
+`
+export type UpdateListMutationFn = Apollo.MutationFunction<
+  UpdateListMutation,
+  UpdateListMutationVariables
+>
+
+/**
+ * __useUpdateListMutation__
+ *
+ * To run a mutation, you first call `useUpdateListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateListMutation, { data, loading, error }] = useUpdateListMutation({
+ *   variables: {
+ *      listId: // value for 'listId'
+ *      name: // value for 'name'
+ *      archived: // value for 'archived'
+ *   },
+ * });
+ */
+export function useUpdateListMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateListMutation,
+    UpdateListMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateListMutation, UpdateListMutationVariables>(
+    UpdateListDocument,
+    options,
+  )
+}
+export type UpdateListMutationHookResult = ReturnType<
+  typeof useUpdateListMutation
+>
+export type UpdateListMutationResult = Apollo.MutationResult<UpdateListMutation>
+export type UpdateListMutationOptions = Apollo.BaseMutationOptions<
+  UpdateListMutation,
+  UpdateListMutationVariables
+>
+export const CreateProjectDocument = gql`
+  mutation CreateProject($options: ProjectInput!) {
+    createProject(options: $options) {
+      id
+      name
+      description
+      createdAt
+    }
+  }
+`
+export type CreateProjectMutationFn = Apollo.MutationFunction<
+  CreateProjectMutation,
+  CreateProjectMutationVariables
+>
+
+/**
+ * __useCreateProjectMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateProjectMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateProjectMutation,
+    CreateProjectMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateProjectMutation,
+    CreateProjectMutationVariables
+  >(CreateProjectDocument, options)
+}
+export type CreateProjectMutationHookResult = ReturnType<
+  typeof useCreateProjectMutation
+>
+export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>
+export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<
+  CreateProjectMutation,
+  CreateProjectMutationVariables
+>
+export const DeleteProjectDocument = gql`
+  mutation DeleteProject($projectId: Float!) {
+    deleteProject(projectId: $projectId)
+  }
+`
+export type DeleteProjectMutationFn = Apollo.MutationFunction<
+  DeleteProjectMutation,
+  DeleteProjectMutationVariables
+>
+
+/**
+ * __useDeleteProjectMutation__
+ *
+ * To run a mutation, you first call `useDeleteProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteProjectMutation, { data, loading, error }] = useDeleteProjectMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useDeleteProjectMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DeleteProjectMutation,
+    DeleteProjectMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    DeleteProjectMutation,
+    DeleteProjectMutationVariables
+  >(DeleteProjectDocument, options)
+}
+export type DeleteProjectMutationHookResult = ReturnType<
+  typeof useDeleteProjectMutation
+>
+export type DeleteProjectMutationResult = Apollo.MutationResult<DeleteProjectMutation>
+export type DeleteProjectMutationOptions = Apollo.BaseMutationOptions<
+  DeleteProjectMutation,
+  DeleteProjectMutationVariables
+>
+export const UpdateProjectDocument = gql`
+  mutation UpdateProject($options: ProjectInput!, $projectId: Float!) {
+    updateProject(options: $options, projectId: $projectId) {
+      id
+      name
+      description
+    }
+  }
+`
+export type UpdateProjectMutationFn = Apollo.MutationFunction<
+  UpdateProjectMutation,
+  UpdateProjectMutationVariables
+>
+
+/**
+ * __useUpdateProjectMutation__
+ *
+ * To run a mutation, you first call `useUpdateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProjectMutation, { data, loading, error }] = useUpdateProjectMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useUpdateProjectMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateProjectMutation,
+    UpdateProjectMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateProjectMutation,
+    UpdateProjectMutationVariables
+  >(UpdateProjectDocument, options)
+}
+export type UpdateProjectMutationHookResult = ReturnType<
+  typeof useUpdateProjectMutation
+>
+export type UpdateProjectMutationResult = Apollo.MutationResult<UpdateProjectMutation>
+export type UpdateProjectMutationOptions = Apollo.BaseMutationOptions<
+  UpdateProjectMutation,
+  UpdateProjectMutationVariables
+>
+export const ListsDocument = gql`
+  query Lists($projectId: Int!) {
+    lists(projectId: $projectId) {
+      ...RegularList
+      ...ListWithIssues
+    }
+  }
+  ${RegularListFragmentDoc}
+  ${ListWithIssuesFragmentDoc}
+`
+
+/**
+ * __useListsQuery__
+ *
+ * To run a query within a React component, call `useListsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListsQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useListsQuery(
+  baseOptions: Apollo.QueryHookOptions<ListsQuery, ListsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ListsQuery, ListsQueryVariables>(
+    ListsDocument,
+    options,
+  )
+}
+export function useListsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<ListsQuery, ListsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ListsQuery, ListsQueryVariables>(
+    ListsDocument,
+    options,
+  )
+}
+export type ListsQueryHookResult = ReturnType<typeof useListsQuery>
+export type ListsLazyQueryHookResult = ReturnType<typeof useListsLazyQuery>
+export type ListsQueryResult = Apollo.QueryResult<
+  ListsQuery,
+  ListsQueryVariables
 >
 export const MeDocument = gql`
   query Me {

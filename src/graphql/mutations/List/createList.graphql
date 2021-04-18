@@ -1,0 +1,7 @@
+mutation CreateList($name: String!, $projectId: Int!) {
+  createList(name: $name, projectId: $projectId) {
+    id
+    name
+    archived
+  }
+}

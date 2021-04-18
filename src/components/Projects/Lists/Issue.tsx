@@ -1,0 +1,54 @@
+import {
+  ArrowBackIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  CheckCircleIcon,
+} from "@chakra-ui/icons"
+import { Avatar, Box, Flex, Text } from "@chakra-ui/react"
+import { List } from "../../../generated/graphql"
+import { IssuePriority } from "../../../utils/constants"
+
+interface IssueProps {
+  issue: List["issues"][0]
+}
+
+const Issue: React.FC<IssueProps> = ({ issue }) => {
+  const { name, archived, priority } = issue
+  return (
+    <Flex
+      flexDir="column"
+      bg="whiteAlpha.800"
+      my="2"
+      width="100%"
+      minH="10"
+      padding="2"
+      borderRadius="base"
+      boxShadow="base"
+    >
+      <Text marginBottom="2">{name}</Text>
+      <Flex
+        flexDir="row"
+        alignItems="center"
+        minW="100%"
+        justifyContent="space-between"
+      >
+        <Flex alignItems="center" fontSize="larger">
+          <CheckCircleIcon
+            marginRight="2"
+            color={archived ? "gray.400" : "green.500"}
+          />
+          {priority === IssuePriority.HIGH && <ArrowUpIcon color="red.500" />}
+          {priority === IssuePriority.MEDIUM && (
+            <ArrowBackIcon color="yellow.500" />
+          )}
+          {priority === IssuePriority.LOW && (
+            <ArrowDownIcon color="green.500" />
+          )}
+        </Flex>
+        <Avatar size="sm" placeSelf="flex-end" />
+      </Flex>
+    </Flex>
+  )
+}
+
+export default Issue

@@ -1,0 +1,11 @@
+fragment ListWithIssues on List {
+  issues {
+    id
+    name
+    description
+    priority
+    listId
+    createdAt
+    updatedAt
+  }
+}
