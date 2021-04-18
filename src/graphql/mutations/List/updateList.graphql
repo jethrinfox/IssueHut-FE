@@ -1,0 +1,7 @@
+mutation UpdateList($listId: Int!, $name: String!, $archived: Boolean!) {
+  updateList(listId: $listId, name: $name, archived: $archived) {
+    id
+    name
+    archived
+  }
+}

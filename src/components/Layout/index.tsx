@@ -8,11 +8,26 @@ interface LayoutProps {
 
 const Layout: NextPage<LayoutProps> = ({ children }) => {
   return (
-    <Box display="flex" minHeight="100vh" flexDir="column">
+    <Box display="flex" height="100vh" flexDir="column" overflow="hidden">
       <Header />
-      <Container maxW="container.lg" flex="1" display="flex" flexDir="column">
-        <Box>{children}</Box>
-      </Container>
+      <Box
+        overflowY="auto"
+        sx={{
+          "&::-webkit-scrollbar": {
+            width: "12px",
+            borderRadius: "6px",
+            backgroundColor: `rgba(0, 0, 0, 0.05)`,
+          },
+          "&::-webkit-scrollbar-thumb": {
+            borderRadius: "6px",
+            backgroundColor: `rgba(0, 0, 0, 0.05)`,
+          },
+        }}
+      >
+        <Container maxW="container.lg" flex="1" display="flex" flexDir="column">
+          <Box>{children}</Box>
+        </Container>
+      </Box>
     </Box>
   )
 }

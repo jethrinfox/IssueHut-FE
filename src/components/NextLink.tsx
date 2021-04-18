@@ -6,30 +6,31 @@ import {
 } from "@chakra-ui/react"
 
 export type NextLinkProps = PropsWithChildren<
-  LinkProps & Omit<ChakraLinkProps, "as">
+  Omit<LinkProps, "as"> & ChakraLinkProps
 >
 
 const NextLink: React.FC<NextLinkProps> = ({
   href,
-  as,
   replace,
   scroll,
   shallow,
   prefetch,
   children,
+  as = "a",
   ...chakraProps
 }) => {
   return (
     <Link
       passHref={true}
       href={href}
-      as={as}
       replace={replace}
       scroll={scroll}
       shallow={shallow}
       prefetch={prefetch}
     >
-      <ChakraLink {...chakraProps}>{children}</ChakraLink>
+      <ChakraLink as={as} {...chakraProps}>
+        {children}
+      </ChakraLink>
     </Link>
   )
 }

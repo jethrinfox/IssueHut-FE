@@ -1,0 +1,7 @@
+fragment RegularList on List {
+  id
+  name
+  archived
+  createdAt
+  updatedAt
+}

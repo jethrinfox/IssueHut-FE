@@ -1,8 +1,8 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
 
-export const useGetIntUrl = () => {
-	const router = useRouter();
-	const intId =
-		typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
-	return intId;
-};
+export const useGetIntUrl = (queryName: string): number => {
+  const router = useRouter()
+  const queryParam = router.query[queryName]
+  const intQuery = typeof queryParam === "string" ? parseInt(queryParam) : -1
+  return intQuery
+}

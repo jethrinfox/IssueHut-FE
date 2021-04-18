@@ -44,6 +44,7 @@
 		"next": "latest",
 		"next-with-apollo": "^5.1.1",
 		"react": "^17.0.1",
+		"react-beautiful-dnd": "^13.1.0",
 		"react-dom": "^17.0.1"
 	},
 	"devDependencies": {
@@ -55,6 +56,7 @@
 		"@graphql-codegen/typescript-react-apollo": "2.2.3",
 		"@types/node": "^12.12.21",
 		"@types/react": "^17.0.2",
+		"@types/react-beautiful-dnd": "^13.0.0",
 		"@types/react-dom": "^17.0.1",
 		"@typescript-eslint/eslint-plugin": "^4.21.0",
 		"@typescript-eslint/parser": "^4.21.0",

@@ -1,6 +1,6 @@
 import { Box, Heading } from "@chakra-ui/layout"
 import { NextPage } from "next"
-import ProjectsContainer from "../components/IndexPage/ProjectsContainer"
+import ProjectsContainer from "../components/Projects/ProjectsContainer"
 import Layout from "../components/Layout"
 
 const IndexPage: NextPage = () => {
