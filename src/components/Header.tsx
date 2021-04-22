@@ -1,8 +1,8 @@
+import { useApolloClient } from "@apollo/client"
+import { Box, Button, Flex, Heading, Link, Text } from "@chakra-ui/react"
 import { FC, useState } from "react"
-import { Flex, Heading, Box, Button, Text, Link } from "@chakra-ui/react"
 import { useLogOutMutation, useMeQuery } from "../generated/graphql"
 import { isServer } from "../utils/isServer"
-import { useApolloClient } from "@apollo/client"
 
 const MenuItems = ({ children }: any) => (
   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">

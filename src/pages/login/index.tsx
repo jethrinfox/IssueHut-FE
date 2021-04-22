@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button"
-import { Box, Flex } from "@chakra-ui/layout"
+import { Box, Flex, Heading } from "@chakra-ui/layout"
 import { Form, Formik } from "formik"
 import { useRouter } from "next/router"
 import { FC } from "react"
@@ -21,6 +21,8 @@ export const LoginPage: FC = () => {
           const response = await login({
             variables: { options: values },
             update: (cache, { data }) => {
+              cache.evict({ fieldName: "projects:{}" })
+
               cache.writeQuery<MeQuery>({
                 query: MeDocument,
                 data: {
@@ -44,6 +46,9 @@ export const LoginPage: FC = () => {
       >
         {({ isSubmitting }) => (
           <Form>
+            <Heading size="md" color="gray.700" marginBottom="4">
+              Login
+            </Heading>
             <InputField name="email" label="Email" />
             <Box mt={4}>
               <InputField name="password" label="Password" type="password" />

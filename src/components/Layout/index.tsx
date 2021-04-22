@@ -24,7 +24,14 @@ const Layout: NextPage<LayoutProps> = ({ children }) => {
           },
         }}
       >
-        <Container maxW="container.lg" flex="1" display="flex" flexDir="column">
+        <Container
+          maxW="container.xl"
+          flex="1"
+          display="flex"
+          flexDir="column"
+          py="2"
+          px="6"
+        >
           <Box>{children}</Box>
         </Container>
       </Box>

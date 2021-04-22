@@ -1,7 +1,6 @@
 import { PlusSquareIcon, StarIcon } from "@chakra-ui/icons"
 import {
   Box,
-  Button,
   Divider,
   Flex,
   Grid,
@@ -57,7 +56,7 @@ const ProjectsContainer: FC = () => {
           flexDir="column"
         >
           <NextLink
-            href={`/projects/view/${id}`}
+            href={`/projects/board/${id}`}
             as="a"
             height="100%"
             width="100%"

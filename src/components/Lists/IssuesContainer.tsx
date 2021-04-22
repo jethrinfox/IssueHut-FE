@@ -1,8 +1,8 @@
 import { IconButton } from "@chakra-ui/button"
 import { PlusSquareIcon } from "@chakra-ui/icons"
 import { Box } from "@chakra-ui/layout"
-import { List } from "../../../generated/graphql"
-import NextLink from "../../NextLink"
+import { List } from "../../generated/graphql"
+import NextLink from "../NextLink"
 import Issue from "./Issue"
 
 interface IssuesContainerProps {
