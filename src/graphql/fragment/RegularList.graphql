@@ -2,6 +2,7 @@ fragment RegularList on List {
   id
   name
   archived
+  order
   createdAt
   updatedAt
 }

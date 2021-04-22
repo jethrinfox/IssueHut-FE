@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button"
-import { Box, Flex } from "@chakra-ui/layout"
+import { Box, Flex, Heading } from "@chakra-ui/layout"
 import { Form, Formik } from "formik"
 import { useRouter } from "next/router"
 import { FC } from "react"
@@ -48,6 +48,9 @@ export const Register: FC = () => {
       >
         {({ isSubmitting }) => (
           <Form>
+            <Heading size="md" color="gray.700" marginBottom="4">
+              Register
+            </Heading>
             <InputField name="email" label="Email" type="email" />
             <Box mt={4}>
               <InputField name="username" label="Username" type="text" />

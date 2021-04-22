@@ -18,6 +18,14 @@ export type Scalars = {
   Float: number
 }
 
+export type Comment = {
+  __typename?: "Comment"
+  id: Scalars["Float"]
+  createdAt: Scalars["String"]
+  updatedAt: Scalars["String"]
+  text: Scalars["String"]
+}
+
 export type EmailInput = {
   email: Scalars["String"]
   password: Scalars["String"]
@@ -38,7 +46,11 @@ export type Issue = {
   description: Scalars["String"]
   priority: Scalars["String"]
   archived: Scalars["Boolean"]
+  order: Scalars["Float"]
   listId: Scalars["Float"]
+  reporterId: Scalars["Float"]
+  reporter: User
+  comments?: Maybe<Array<Comment>>
 }
 
 export type IssueInput = {
@@ -54,6 +66,7 @@ export type List = {
   createdAt: Scalars["String"]
   updatedAt: Scalars["String"]
   name: Scalars["String"]
+  order: Scalars["Float"]
   archived: Scalars["Boolean"]
   issues: Array<Issue>
 }
@@ -212,7 +225,7 @@ export type RegularErrorFragment = { __typename?: "FieldError" } & Pick<
 
 export type RegularListFragment = { __typename?: "List" } & Pick<
   List,
-  "id" | "name" | "archived" | "createdAt" | "updatedAt"
+  "id" | "name" | "archived" | "order" | "createdAt" | "updatedAt"
 >
 
 export type RegularUserFragment = { __typename?: "User" } & Pick<
@@ -366,6 +379,7 @@ export const RegularListFragmentDoc = gql`
     id
     name
     archived
+    order
     createdAt
     updatedAt
   }

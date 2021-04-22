@@ -7,8 +7,11 @@ import { InputField } from "../../components/InputField"
 import Layout from "../../components/Layout"
 import NextLink from "../../components/NextLink"
 import { useCreateProjectMutation } from "../../generated/graphql"
+import { useIsAuth } from "../../hooks/useIsAuth"
 
 const AddProjectPage: NextPage = () => {
+  useIsAuth()
+
   const [createProject] = useCreateProjectMutation()
   const router = useRouter()
 

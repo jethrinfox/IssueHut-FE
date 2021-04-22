@@ -2,10 +2,13 @@ import { Box, Flex, Heading } from "@chakra-ui/react"
 import { NextPage } from "next"
 import Breadcrums from "../../../components/Breadcrums"
 import Layout from "../../../components/Layout"
-import ListsContainer from "../../../components/Projects/Lists/ListsContainer"
+import ListsContainer from "../../../components/Lists/ListsContainer"
 import useGetProjectFromQuery from "../../../hooks/useGetProjectFromQuery"
+import { useIsAuth } from "../../../hooks/useIsAuth"
 
 const ProjectPage: NextPage = () => {
+  useIsAuth()
+
   const { data, loading } = useGetProjectFromQuery()
 
   if (!data && !loading) {
@@ -20,11 +23,11 @@ const ProjectPage: NextPage = () => {
 
   return (
     <Layout>
-      <Box my={4}>
-        <Box marginBottom="4">
-          <Breadcrums breadcrums={["Project", data?.project?.name, "view"]} />
+      <Box my={2}>
+        <Box>
+          <Breadcrums breadcrums={["Project", data?.project?.name, "Board"]} />
+          <Heading size="md">{data?.project?.name}</Heading>
         </Box>
-        <Heading size="md">{data?.project?.name}</Heading>
         <ListsContainer />
       </Box>
     </Layout>
