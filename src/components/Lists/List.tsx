@@ -1,10 +1,9 @@
-import { Button, IconButton } from "@chakra-ui/button"
-import { PlusSquareIcon } from "@chakra-ui/icons"
+import { Editable, EditableInput, EditablePreview } from "@chakra-ui/editable"
 import { Box, Flex, Heading } from "@chakra-ui/layout"
+import { Fade } from "@chakra-ui/transition"
 import { Draggable, Droppable } from "react-beautiful-dnd"
 import { List as ListType } from "../../generated/graphql"
 import AddIssueButton from "../Issue/AddIssueButton"
-import NextLink from "../NextLink"
 import Issue from "./Issue"
 
 interface ListProps {
@@ -12,11 +11,11 @@ interface ListProps {
   index: number
 }
 
-const List: React.FC<ListProps> = ({ list, index }) => {
-  const { id, name, order, issues } = list
+const List: React.FC<ListProps> = ({ list }) => {
+  const { id, name, issues, order } = list
 
   return (
-    <Draggable draggableId={id.toString()} index={index}>
+    <Draggable draggableId={id.toString()} index={order - 1}>
       {(provided) => (
         <Box
           minH="40"
@@ -49,12 +48,16 @@ const List: React.FC<ListProps> = ({ list, index }) => {
           }}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
         >
-          <Heading size="md">{name}</Heading>
+          <Box {...provided.dragHandleProps}>
+            <Editable zIndex="sticky" fontWeight="bold" defaultValue={name}>
+              <EditablePreview />
+              <EditableInput />
+            </Editable>
+          </Box>
           <Flex flexDir="column">
             <Droppable droppableId={list.id.toString()} type="ISSUES">
-              {(provided) => (
+              {(provided, snapshot) => (
                 <Flex
                   flexDir="column"
                   width="100%"
@@ -64,10 +67,15 @@ const List: React.FC<ListProps> = ({ list, index }) => {
                   {issues.map((issue, index) => {
                     return <Issue key={issue.id} issue={issue} index={index} />
                   })}
+                  {provided.placeholder}
+                  {!snapshot.isDraggingOver && (
+                    <Fade in={!snapshot.isDraggingOver} unmountOnExit>
+                      <AddIssueButton listId={list.id} />
+                    </Fade>
+                  )}
                 </Flex>
               )}
             </Droppable>
-            <AddIssueButton listId={list.id} />
           </Flex>
         </Box>
       )}

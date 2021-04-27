@@ -1,0 +1,6 @@
+mutation UpdateListOrder($options: UpdateListsOrderInput!) {
+  updateListsOrder(options: $options) {
+    ...RegularList
+    ...ListWithIssues
+  }
+}

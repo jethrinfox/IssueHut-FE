@@ -1,72 +1,50 @@
-import { DraggableLocation } from "react-beautiful-dnd"
+import { DropResult } from "react-beautiful-dnd"
 
-export const isPositionChanged = (
-  destination: DraggableLocation | undefined,
-  source: DraggableLocation | undefined,
-): boolean => {
+export const isPositionChanged = ({
+  source,
+  destination,
+}: DropResult): boolean => {
   if (!destination) return false
   const isSameList = destination.droppableId === source.droppableId
   const isSamePosition = destination.index === source.index
   return !isSameList || !isSamePosition
 }
 
-export const calculateIssueListPosition = (
-  ...args: (number | DraggableLocation | undefined)[]
-): number => {
-  const { prevIssue, nextIssue } = getAfterDropPrevNextIssue(...args)
-  let position
-
-  if (!prevIssue && !nextIssue) {
-    position = 1
-  } else if (!prevIssue) {
-    position = nextIssue.listPosition - 1
-  } else if (!nextIssue) {
-    position = prevIssue.listPosition + 1
-  } else {
-    position =
-      prevIssue.listPosition +
-      (nextIssue.listPosition - prevIssue.listPosition) / 2
-  }
-  return position
-}
-
-export const getAfterDropPrevNextIssue = (
-  allIssues: any[],
-  destination: { droppableId: any; index: number } | undefined,
-  source: { droppableId: any } | undefined,
-  droppedIssueId: undefined,
+export const updateOrder = (
+  data: any,
+  { source, destination, draggableId }: DropResult,
 ) => {
-  const beforeDropDestinationIssues = getSortedListIssues(
-    allIssues,
-    destination.droppableId,
-  )
-  const droppedIssue = allIssues.find(
-    (issue: { id: any }) => issue.id === droppedIssueId,
-  )
-  const isSameList = destination.droppableId === source.droppableId
+  const itemId = Number(draggableId)
+  const prevItemOrder = source.index + 1
+  const newItemOrder = destination!.index + 1
+  const didMoveUp = source.index < destination!.index
 
-  const afterDropDestinationIssues = isSameList
-    ? moveItemWithinArray(
-        beforeDropDestinationIssues,
-        droppedIssue,
-        destination.index,
-      )
-    : insertItemIntoArray(
-        beforeDropDestinationIssues,
-        droppedIssue,
-        destination.index,
-      )
+  const newOrderMap = data.map((item: any) => {
+    let itemNewPosition
 
-  return {
-    prevIssue: afterDropDestinationIssues[destination.index - 1],
-    nextIssue: afterDropDestinationIssues[destination.index + 1],
-  }
+    if (item.id === itemId) {
+      itemNewPosition = newItemOrder
+    } else if (
+      didMoveUp &&
+      item.order > prevItemOrder &&
+      item.order <= newItemOrder
+    ) {
+      itemNewPosition = item.order - 1
+    } else if (
+      !didMoveUp &&
+      item.order < prevItemOrder &&
+      item.order >= newItemOrder
+    ) {
+      itemNewPosition = item.order + 1
+    } else {
+      itemNewPosition = item.order
+    }
+
+    return {
+      ...item,
+      order: itemNewPosition,
+    }
+  })
+
+  return newItemOrder
 }
-
-export const getSortedListIssues = (issues: any[], status: any) =>
-  issues
-    .filter((issue: { status: any }) => issue.status === status)
-    .sort(
-      (a: { listPosition: number }, b: { listPosition: number }) =>
-        a.listPosition - b.listPosition,
-    )

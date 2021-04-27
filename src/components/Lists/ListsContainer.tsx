@@ -1,24 +1,38 @@
-import { Flex, Wrap } from "@chakra-ui/layout"
-import { Skeleton } from "@chakra-ui/skeleton"
+import { Flex } from "@chakra-ui/layout"
+import { Fade } from "@chakra-ui/transition"
+import { useEffect, useState } from "react"
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd"
-import { useListsQuery } from "../../generated/graphql"
+import {
+  ListsQueryResult,
+  useListsQuery,
+  useUpdateListOrderMutation,
+} from "../../generated/graphql"
 import { useGetIntUrl } from "../../hooks/useGetIntUrl"
 import { isPositionChanged } from "../../utils/draggablesUtils"
 import AddListButton from "./AddListButton"
 import List from "./List"
 import ListsSkeleton from "./ListsSkeleton"
+import { handleUpdateListOrder } from "../../utils/handleUpdateOrders"
 
 const ListsContainer: React.FC = () => {
   const projectId = useGetIntUrl("projectId")
-  const { data, loading } = useListsQuery({
+  const { data: queryData, loading } = useListsQuery({
     skip: projectId === -1,
     variables: { projectId },
   })
+  const [updateListOrder] = useUpdateListOrderMutation()
 
-  const onDragEnd = ({ destination, source, draggableId }: DropResult) => {
-    if (!isPositionChanged(source, destination)) return
-    const issueId = Number(draggableId)
+  const [data, setData] = useState<ListsQueryResult["data"] | null>(null)
+
+  const onDragEnd = (result: DropResult) => {
+    if (!isPositionChanged(result)) return
+    if (result.type === "LISTS") handleUpdateListOrder(result, updateListOrder)
+    // if ( result.type === "ISSUES") handleUpdateListOrder()
   }
+
+  useEffect(() => {
+    queryData && setData(queryData)
+  }, [queryData])
 
   if (loading) return <ListsSkeleton />
 
@@ -37,7 +51,7 @@ const ListsContainer: React.FC = () => {
         type="LISTS"
         direction="horizontal"
       >
-        {(provided) => (
+        {(provided, snapshot) => (
           <Flex
             py="4"
             flexWrap="nowrap"
@@ -58,11 +72,18 @@ const ListsContainer: React.FC = () => {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {data.lists.map((list, index) => (
-                <List key={list.id} list={list} index={index} />
-              ))}
+              {[...data.lists]
+                .sort((a, b) => (a.order > b.order ? 1 : -1))
+                .map((list, index) => (
+                  <List key={list.id} list={list} index={index} />
+                ))}
+              {provided.placeholder}
             </Flex>
-            <AddListButton projectId={projectId} />
+            {!snapshot.isDraggingOver && (
+              <Fade in={!snapshot.isDraggingOver} unmountOnExit>
+                <AddListButton projectId={projectId} />
+              </Fade>
+            )}
           </Flex>
         )}
       </Droppable>

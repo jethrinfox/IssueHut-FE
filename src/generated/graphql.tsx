@@ -85,6 +85,7 @@ export type Mutation = {
   createList: List
   updateList: List
   deleteList: Scalars["Boolean"]
+  updateListsOrder: Array<List>
 }
 
 export type MutationRegisterArgs = {
@@ -137,6 +138,10 @@ export type MutationDeleteListArgs = {
   listId: Scalars["Int"]
 }
 
+export type MutationUpdateListsOrderArgs = {
+  options: UpdateListsOrderInput
+}
+
 export type Project = {
   __typename?: "Project"
   id: Scalars["Float"]
@@ -179,6 +184,11 @@ export type QueryListsArgs = {
 
 export type QueryListArgs = {
   listId: Scalars["Int"]
+}
+
+export type UpdateListsOrderInput = {
+  id: Scalars["Float"]
+  order: Scalars["Float"]
 }
 
 export type User = {
@@ -289,6 +299,16 @@ export type UpdateListMutation = { __typename?: "Mutation" } & {
   updateList: { __typename?: "List" } & Pick<List, "id" | "name" | "archived">
 }
 
+export type UpdateListOrderMutationVariables = Exact<{
+  options: UpdateListsOrderInput
+}>
+
+export type UpdateListOrderMutation = { __typename?: "Mutation" } & {
+  updateListsOrder: Array<
+    { __typename?: "List" } & RegularListFragment & ListWithIssuesFragment
+  >
+}
+
 export type CreateProjectMutationVariables = Exact<{
   options: ProjectInput
 }>
@@ -318,6 +338,29 @@ export type UpdateProjectMutation = { __typename?: "Mutation" } & {
   updateProject: { __typename?: "Project" } & Pick<
     Project,
     "id" | "name" | "description"
+  >
+}
+
+export type IssueQueryVariables = Exact<{
+  issueId: Scalars["Int"]
+}>
+
+export type IssueQuery = { __typename?: "Query" } & {
+  issue?: Maybe<
+    { __typename?: "Issue" } & Pick<
+      Issue,
+      "id" | "name" | "description" | "priority" | "archived" | "listId"
+    > & {
+        reporter: { __typename?: "User" } & Pick<User, "id" | "username">
+        comments?: Maybe<
+          Array<
+            { __typename?: "Comment" } & Pick<
+              Comment,
+              "id" | "createdAt" | "updatedAt" | "text"
+            >
+          >
+        >
+      }
   >
 }
 
@@ -701,6 +744,58 @@ export type UpdateListMutationOptions = Apollo.BaseMutationOptions<
   UpdateListMutation,
   UpdateListMutationVariables
 >
+export const UpdateListOrderDocument = gql`
+  mutation UpdateListOrder($options: UpdateListsOrderInput!) {
+    updateListsOrder(options: $options) {
+      ...RegularList
+      ...ListWithIssues
+    }
+  }
+  ${RegularListFragmentDoc}
+  ${ListWithIssuesFragmentDoc}
+`
+export type UpdateListOrderMutationFn = Apollo.MutationFunction<
+  UpdateListOrderMutation,
+  UpdateListOrderMutationVariables
+>
+
+/**
+ * __useUpdateListOrderMutation__
+ *
+ * To run a mutation, you first call `useUpdateListOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateListOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateListOrderMutation, { data, loading, error }] = useUpdateListOrderMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useUpdateListOrderMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateListOrderMutation,
+    UpdateListOrderMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateListOrderMutation,
+    UpdateListOrderMutationVariables
+  >(UpdateListOrderDocument, options)
+}
+export type UpdateListOrderMutationHookResult = ReturnType<
+  typeof useUpdateListOrderMutation
+>
+export type UpdateListOrderMutationResult = Apollo.MutationResult<UpdateListOrderMutation>
+export type UpdateListOrderMutationOptions = Apollo.BaseMutationOptions<
+  UpdateListOrderMutation,
+  UpdateListOrderMutationVariables
+>
 export const CreateProjectDocument = gql`
   mutation CreateProject($options: ProjectInput!) {
     createProject(options: $options) {
@@ -851,6 +946,69 @@ export type UpdateProjectMutationResult = Apollo.MutationResult<UpdateProjectMut
 export type UpdateProjectMutationOptions = Apollo.BaseMutationOptions<
   UpdateProjectMutation,
   UpdateProjectMutationVariables
+>
+export const IssueDocument = gql`
+  query Issue($issueId: Int!) {
+    issue(issueId: $issueId) {
+      id
+      name
+      description
+      priority
+      archived
+      listId
+      reporter {
+        id
+        username
+      }
+      comments {
+        id
+        createdAt
+        updatedAt
+        text
+      }
+    }
+  }
+`
+
+/**
+ * __useIssueQuery__
+ *
+ * To run a query within a React component, call `useIssueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIssueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIssueQuery({
+ *   variables: {
+ *      issueId: // value for 'issueId'
+ *   },
+ * });
+ */
+export function useIssueQuery(
+  baseOptions: Apollo.QueryHookOptions<IssueQuery, IssueQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<IssueQuery, IssueQueryVariables>(
+    IssueDocument,
+    options,
+  )
+}
+export function useIssueLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<IssueQuery, IssueQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<IssueQuery, IssueQueryVariables>(
+    IssueDocument,
+    options,
+  )
+}
+export type IssueQueryHookResult = ReturnType<typeof useIssueQuery>
+export type IssueLazyQueryHookResult = ReturnType<typeof useIssueLazyQuery>
+export type IssueQueryResult = Apollo.QueryResult<
+  IssueQuery,
+  IssueQueryVariables
 >
 export const ListsDocument = gql`
   query Lists($projectId: Int!) {
