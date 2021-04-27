@@ -1,0 +1,20 @@
+query Issue($issueId: Int!) {
+  issue(issueId: $issueId) {
+    id
+    name
+    description
+    priority
+    archived
+    listId
+    reporter {
+      id
+      username
+    }
+    comments {
+      id
+      createdAt
+      updatedAt
+      text
+    }
+  }
+}

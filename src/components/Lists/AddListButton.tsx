@@ -35,7 +35,7 @@ const AddListButton: React.FC<AddListButtonProps> = ({ projectId }) => {
 
   return (
     <Box
-      maxH="40"
+      height="40"
       width="52"
       bg="gray.100"
       borderRadius="base"
