@@ -1,0 +1,5 @@
+query Issues($listId: Int!) {
+  issues(listId: $listId) {
+    ...RegularIssue
+  }
+}

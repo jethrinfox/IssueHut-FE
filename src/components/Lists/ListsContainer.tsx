@@ -1,38 +1,58 @@
 import { Flex } from "@chakra-ui/layout"
 import { Fade } from "@chakra-ui/transition"
-import { useEffect, useState } from "react"
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd"
 import {
-  ListsQueryResult,
   useListsQuery,
+  useUpdateIssueOrderMutation,
   useUpdateListOrderMutation,
-} from "../../generated/graphql"
-import { useGetIntUrl } from "../../hooks/useGetIntUrl"
-import { isPositionChanged } from "../../utils/draggablesUtils"
+} from "generated//graphql"
+import { useGetIntUrl } from "hooks//useGetIntUrl"
+import { isPositionChanged } from "utils/draggablesUtils"
+import {
+  updateCachedIssueOrder,
+  updateCachedListOrder,
+} from "utils/handleUpdateOrders"
 import AddListButton from "./AddListButton"
 import List from "./List"
 import ListsSkeleton from "./ListsSkeleton"
-import { handleUpdateListOrder } from "../../utils/handleUpdateOrders"
 
 const ListsContainer: React.FC = () => {
   const projectId = useGetIntUrl("projectId")
-  const { data: queryData, loading } = useListsQuery({
+  console.log("🚀 ~ projectId", projectId)
+  const { data, loading } = useListsQuery({
     skip: projectId === -1,
     variables: { projectId },
   })
+  console.log("🚀 ~ loading", loading)
+  console.log("🚀 ~ data", data)
   const [updateListOrder] = useUpdateListOrderMutation()
-
-  const [data, setData] = useState<ListsQueryResult["data"] | null>(null)
+  const [updateIssueOrder] = useUpdateIssueOrderMutation()
 
   const onDragEnd = (result: DropResult) => {
     if (!isPositionChanged(result)) return
-    if (result.type === "LISTS") handleUpdateListOrder(result, updateListOrder)
-    // if ( result.type === "ISSUES") handleUpdateListOrder()
+    if (result.type === "LISTS") {
+      updateListOrder({
+        variables: {
+          options: {
+            id: Number(result.draggableId),
+            order: result.destination!.index + 1,
+          },
+        },
+        update: (cache) => updateCachedListOrder(cache, result, projectId),
+      })
+    }
+    if (result.type === "ISSUES") {
+      updateIssueOrder({
+        variables: {
+          options: {
+            id: Number(result.draggableId),
+            order: result.destination!.index + 1,
+          },
+        },
+        update: (cache) => updateCachedIssueOrder(cache, result, projectId),
+      })
+    }
   }
-
-  useEffect(() => {
-    queryData && setData(queryData)
-  }, [queryData])
 
   if (loading) return <ListsSkeleton />
 
@@ -74,8 +94,8 @@ const ListsContainer: React.FC = () => {
             >
               {[...data.lists]
                 .sort((a, b) => (a.order > b.order ? 1 : -1))
-                .map((list, index) => (
-                  <List key={list.id} list={list} index={index} />
+                .map((list) => (
+                  <List key={list.id} list={list} />
                 ))}
               {provided.placeholder}
             </Flex>

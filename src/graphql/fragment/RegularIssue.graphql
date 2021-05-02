@@ -1,0 +1,10 @@
+fragment RegularIssue on Issue {
+  id
+  name
+  description
+  order
+  priority
+  listId
+  createdAt
+  updatedAt
+}

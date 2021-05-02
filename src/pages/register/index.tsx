@@ -3,15 +3,11 @@ import { Box, Flex, Heading } from "@chakra-ui/layout"
 import { Form, Formik } from "formik"
 import { useRouter } from "next/router"
 import { FC } from "react"
-import { InputField } from "../../components/InputField"
-import AuthLayout from "../../components/Layout/AuthLayout"
-import NextLink from "../../components/NextLink"
-import {
-  MeDocument,
-  MeQuery,
-  useRegisterMutation,
-} from "../../generated/graphql"
-import { toErrorMap } from "../../utils/toErrorMap"
+import { InputField } from "components//InputField"
+import AuthLayout from "components//Layout/AuthLayout"
+import NextLink from "components//NextLink"
+import { MeDocument, MeQuery, useRegisterMutation } from "generated//graphql"
+import { toErrorMap } from "utils/toErrorMap"
 
 export const Register: FC = () => {
   const [register] = useRegisterMutation()

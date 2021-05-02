@@ -3,11 +3,11 @@ import { Box, Center, Flex, Heading } from "@chakra-ui/layout"
 import { Form, Formik } from "formik"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
-import { InputField } from "../../components/InputField"
-import Layout from "../../components/Layout"
-import NextLink from "../../components/NextLink"
-import { useCreateProjectMutation } from "../../generated/graphql"
-import { useIsAuth } from "../../hooks/useIsAuth"
+import { InputField } from "components//InputField"
+import Layout from "components//Layout"
+import NextLink from "components//NextLink"
+import { useCreateProjectMutation } from "generated//graphql"
+import { useIsAuth } from "hooks//useIsAuth"
 
 const AddProjectPage: NextPage = () => {
   useIsAuth()

@@ -1,10 +1,10 @@
 import { Box, Flex, Heading } from "@chakra-ui/react"
 import { NextPage } from "next"
-import Breadcrums from "../../../components/Breadcrums"
-import Layout from "../../../components/Layout"
-import ListsContainer from "../../../components/Lists/ListsContainer"
-import useGetProjectFromQuery from "../../../hooks/useGetProjectFromQuery"
-import { useIsAuth } from "../../../hooks/useIsAuth"
+import Breadcrums from "components//Breadcrums"
+import Layout from "components//Layout"
+import ListsContainer from "components//Lists/ListsContainer"
+import useGetProjectFromQuery from "hooks//useGetProjectFromQuery"
+import { useIsAuth } from "hooks//useIsAuth"
 
 const ProjectPage: NextPage = () => {
   useIsAuth()

@@ -13,9 +13,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { Draggable } from "react-beautiful-dnd"
-import { List } from "../../generated/graphql"
-import { useGetIntUrl } from "../../hooks/useGetIntUrl"
-import { IssuePriority } from "../../utils/constants"
+import { List } from "generated//graphql"
+import { useGetIntUrl } from "hooks//useGetIntUrl"
+import { IssuePriority } from "utils/constants"
 import IssueModal from "../Issue/IssueModal"
 
 interface IssueProps {

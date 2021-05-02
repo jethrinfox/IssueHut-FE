@@ -3,6 +3,7 @@ fragment ListWithIssues on List {
     id
     name
     description
+    order
     priority
     listId
     createdAt

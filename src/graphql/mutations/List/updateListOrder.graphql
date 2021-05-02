@@ -1,6 +1,3 @@
 mutation UpdateListOrder($options: UpdateListsOrderInput!) {
-  updateListsOrder(options: $options) {
-    ...RegularList
-    ...ListWithIssues
-  }
+  updateListOrder(options: $options)
 }

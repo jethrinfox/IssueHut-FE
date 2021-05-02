@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import Link from "next/link"
 import { FC } from "react"
-import { useProjectsQuery } from "../../generated/graphql"
+import { useProjectsQuery } from "generated//graphql"
 import NextLink from "../NextLink"
 
 // interface ProjectsContainerProps {

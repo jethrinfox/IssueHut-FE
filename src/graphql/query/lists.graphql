@@ -1,6 +1,8 @@
 query Lists($projectId: Int!) {
   lists(projectId: $projectId) {
     ...RegularList
-    ...ListWithIssues
+    issues {
+      ...RegularIssue
+    }
   }
 }
