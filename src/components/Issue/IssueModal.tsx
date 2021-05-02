@@ -21,8 +21,8 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useEffect } from "react"
-import { useIssueLazyQuery } from "../../generated/graphql"
-import { IssuePriority } from "../../utils/constants"
+import { useIssueLazyQuery } from "generated/graphql"
+import { IssuePriority } from "utils/constants"
 
 interface IssueModalProps {
   projectId: number

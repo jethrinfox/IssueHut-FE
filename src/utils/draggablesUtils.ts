@@ -10,16 +10,23 @@ export const isPositionChanged = ({
   return !isSameList || !isSamePosition
 }
 
-export const updateOrder = (
-  data: any,
-  { source, destination, draggableId }: DropResult,
-) => {
+interface Item {
+  id: number
+  order: number
+}
+
+export function updateOrder<T extends Item>(
+  items: T[],
+  result: DropResult,
+): T[] {
+  const { source, destination, draggableId } = result
+
   const itemId = Number(draggableId)
   const prevItemOrder = source.index + 1
   const newItemOrder = destination!.index + 1
   const didMoveUp = source.index < destination!.index
 
-  const newOrderMap = data.map((item: any) => {
+  const newOrderMap = items.map((item) => {
     let itemNewPosition
 
     if (item.id === itemId) {
@@ -46,5 +53,5 @@ export const updateOrder = (
     }
   })
 
-  return newItemOrder
+  return newOrderMap
 }

@@ -1,7 +1,7 @@
 import { DeleteIcon, PlusSquareIcon } from "@chakra-ui/icons"
 import { Box, Flex, IconButton, Input } from "@chakra-ui/react"
 import { ChangeEvent, useState } from "react"
-import { ListsDocument, useCreateListMutation } from "../../generated/graphql"
+import { ListsDocument, useCreateListMutation } from "generated//graphql"
 
 interface AddListButtonProps {
   projectId: number

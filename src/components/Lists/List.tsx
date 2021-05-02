@@ -2,7 +2,7 @@ import { Editable, EditableInput, EditablePreview } from "@chakra-ui/editable"
 import { Box, Flex, Heading } from "@chakra-ui/layout"
 import { Fade } from "@chakra-ui/transition"
 import { Draggable, Droppable } from "react-beautiful-dnd"
-import { List as ListType } from "../../generated/graphql"
+import { List as ListType } from "generated//graphql"
 import AddIssueButton from "../Issue/AddIssueButton"
 import Issue from "./Issue"
 
@@ -64,9 +64,13 @@ const List: React.FC<ListProps> = ({ list }) => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {issues.map((issue, index) => {
-                    return <Issue key={issue.id} issue={issue} index={index} />
-                  })}
+                  {[...issues]
+                    .sort((a, b) => (a.order > b.order ? 1 : -1))
+                    .map((issue, index) => {
+                      return (
+                        <Issue key={issue.id} issue={issue} index={index} />
+                      )
+                    })}
                   {provided.placeholder}
                   {!snapshot.isDraggingOver && (
                     <Fade in={!snapshot.isDraggingOver} unmountOnExit>
