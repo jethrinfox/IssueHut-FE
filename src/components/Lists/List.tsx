@@ -1,18 +1,18 @@
 import { Editable, EditableInput, EditablePreview } from "@chakra-ui/editable"
-import { Box, Flex, Heading } from "@chakra-ui/layout"
+import { Box, Flex } from "@chakra-ui/layout"
 import { Fade } from "@chakra-ui/transition"
+import { Issue, List as ListType } from "generated/graphql"
 import { Draggable, Droppable } from "react-beautiful-dnd"
-import { List as ListType } from "generated//graphql"
 import AddIssueButton from "../Issue/AddIssueButton"
-import Issue from "./Issue"
+import IssueCard from "../Issue/IssueCard"
 
 interface ListProps {
-  list: ListType
-  index: number
+  list: Pick<ListType, "id" | "name" | "order">
+  issues: Pick<Issue, "name" | "archived" | "priority" | "id" | "order">[]
 }
 
-const List: React.FC<ListProps> = ({ list }) => {
-  const { id, name, issues, order } = list
+const List: React.FC<ListProps> = ({ list, issues }) => {
+  const { id, name, order } = list
 
   return (
     <Draggable draggableId={id.toString()} index={order - 1}>
@@ -50,7 +50,7 @@ const List: React.FC<ListProps> = ({ list }) => {
           {...provided.draggableProps}
         >
           <Box {...provided.dragHandleProps}>
-            <Editable zIndex="sticky" fontWeight="bold" defaultValue={name}>
+            <Editable fontWeight="bold" defaultValue={name}>
               <EditablePreview />
               <EditableInput />
             </Editable>
@@ -66,10 +66,8 @@ const List: React.FC<ListProps> = ({ list }) => {
                 >
                   {[...issues]
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
-                    .map((issue, index) => {
-                      return (
-                        <Issue key={issue.id} issue={issue} index={index} />
-                      )
+                    .map((issue) => {
+                      return <IssueCard key={issue.id} issue={issue} />
                     })}
                   {provided.placeholder}
                   {!snapshot.isDraggingOver && (

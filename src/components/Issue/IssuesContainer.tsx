@@ -1,19 +1,19 @@
 import { IconButton } from "@chakra-ui/button"
 import { PlusSquareIcon } from "@chakra-ui/icons"
 import { Box } from "@chakra-ui/layout"
-import { List } from "generated//graphql"
+import { Issue } from "generated//graphql"
 import NextLink from "../NextLink"
-import Issue from "./Issue"
+import IssueCard from "./IssueCard"
 
 interface IssuesContainerProps {
-  issues: List["issues"]
+  issues: Pick<Issue, "name" | "archived" | "priority" | "id" | "order">[]
 }
 
 const IssuesContainer: React.FC<IssuesContainerProps> = ({ issues }) => {
   return (
     <>
       {issues.map((issue) => {
-        return <Issue key={issue.id} issue={issue} />
+        return <IssueCard key={issue.id} issue={issue} />
       })}
       <Box height="10" minW="100%" borderRadius="base" boxShadow="md">
         <NextLink href="/projects/add">

@@ -21,7 +21,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useEffect } from "react"
-import { useIssueLazyQuery } from "generated/graphql"
+import { useIssueLazyQuery, useDeleteIssueMutation } from "generated/graphql"
 import { IssuePriority } from "utils/constants"
 
 interface IssueModalProps {
@@ -40,6 +40,7 @@ const IssueModal: React.FC<IssueModalProps> = ({
   const [fetchIssue, { data, loading }] = useIssueLazyQuery({
     variables: { issueId },
   })
+  const [deleteIssue] = useDeleteIssueMutation()
 
   useEffect(() => {
     if (!data && isOpen) {
@@ -90,10 +91,6 @@ const IssueModal: React.FC<IssueModalProps> = ({
           <Avatar size="sm" placeSelf="flex-end" />
           <Text>{data.issue?.reporter.username}</Text>
         </Box>
-        <Box>
-          <Text>Description:</Text>
-          {data.issue?.description}
-        </Box>
       </Flex>
     )
   }
@@ -113,7 +110,26 @@ const IssueModal: React.FC<IssueModalProps> = ({
           <Button colorScheme="blue" mr={3} onClick={onClose}>
             Close
           </Button>
-          <Button variant="ghost">Secondary Action</Button>
+          <Button
+            onClick={() => {
+              deleteIssue({
+                variables: { issueId },
+                optimisticResponse: {
+                  __typename: "Mutation",
+                  deleteIssue: true,
+                },
+                update: (cache, { data }) => {
+                  if (data?.deleteIssue) {
+                    cache.evict({ id: "Issue:" + issueId })
+                  }
+                },
+              })
+              onClose()
+            }}
+            variant="ghost"
+          >
+            Delete Issue
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
