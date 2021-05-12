@@ -1,8 +1,5 @@
 mutation CreateProject($options: ProjectInput!) {
   createProject(options: $options) {
-    id
-    name
-    description
-    createdAt
+    ...RegularProject
   }
 }

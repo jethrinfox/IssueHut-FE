@@ -1,12 +1,5 @@
 fragment ListWithIssues on List {
   issues {
-    id
-    name
-    description
-    order
-    priority
-    listId
-    createdAt
-    updatedAt
+    ...RegularIssue
   }
 }

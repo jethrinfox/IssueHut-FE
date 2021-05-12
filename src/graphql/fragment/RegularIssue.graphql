@@ -3,6 +3,7 @@ fragment RegularIssue on Issue {
   name
   description
   order
+  archived
   priority
   listId
   createdAt
