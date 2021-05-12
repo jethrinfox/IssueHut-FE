@@ -1,0 +1,5 @@
+mutation CreateIssue($options: IssueInput!, $listId: Int!) {
+  createIssue(options: $options, listId: $listId) {
+    ...RegularIssue
+  }
+}

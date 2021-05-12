@@ -3,7 +3,7 @@ import { NextPage } from "next"
 import Header from "../Header"
 
 interface LayoutProps {
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 const Layout: NextPage<LayoutProps> = ({ children }) => {

@@ -12,20 +12,19 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Draggable } from "react-beautiful-dnd"
-import { List } from "generated//graphql"
+import { Issue } from "generated//graphql"
 import { useGetIntUrl } from "hooks//useGetIntUrl"
+import { Draggable } from "react-beautiful-dnd"
 import { IssuePriority } from "utils/constants"
-import IssueModal from "../Issue/IssueModal"
+import IssueModal from "./IssueModal"
 
-interface IssueProps {
-  issue: List["issues"][0]
-  index: number
+interface IssueCardProps {
+  issue: Pick<Issue, "name" | "archived" | "priority" | "id" | "order">
 }
 
-const Issue: React.FC<IssueProps> = ({ issue, index }) => {
+const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   const projectId = useGetIntUrl("projectId")
-  const { name, archived, priority, id } = issue
+  const { name, archived, priority, id, order } = issue
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -37,7 +36,7 @@ const Issue: React.FC<IssueProps> = ({ issue, index }) => {
         issueId={id}
         projectId={projectId}
       />
-      <Draggable draggableId={id.toString()} index={index}>
+      <Draggable draggableId={id.toString()} index={order - 1}>
         {(provided) => (
           <LinkBox as="article">
             <Flex
@@ -87,4 +86,4 @@ const Issue: React.FC<IssueProps> = ({ issue, index }) => {
   )
 }
 
-export default Issue
+export default IssueCard

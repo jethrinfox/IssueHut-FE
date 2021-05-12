@@ -1,0 +1,3 @@
+mutation DeleteIssue($issueId: Int!) {
+  deleteIssue(issueId: $issueId)
+}

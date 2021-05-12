@@ -1,58 +1,22 @@
 import { Flex } from "@chakra-ui/layout"
 import { Fade } from "@chakra-ui/transition"
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd"
-import {
-  useListsQuery,
-  useUpdateIssueOrderMutation,
-  useUpdateListOrderMutation,
-} from "generated//graphql"
+import { useListsQuery } from "generated//graphql"
 import { useGetIntUrl } from "hooks//useGetIntUrl"
-import { isPositionChanged } from "utils/draggablesUtils"
-import {
-  updateCachedIssueOrder,
-  updateCachedListOrder,
-} from "utils/handleUpdateOrders"
+import { FC } from "react"
+import { DragDropContext, Droppable } from "react-beautiful-dnd"
+import useDragContext from "../../hooks/useDragContext"
 import AddListButton from "./AddListButton"
 import List from "./List"
 import ListsSkeleton from "./ListsSkeleton"
 
-const ListsContainer: React.FC = () => {
+const ListsContainer: FC = () => {
   const projectId = useGetIntUrl("projectId")
-  console.log("🚀 ~ projectId", projectId)
   const { data, loading } = useListsQuery({
     skip: projectId === -1,
     variables: { projectId },
+    // fetchPolicy: "no-cache",
   })
-  console.log("🚀 ~ loading", loading)
-  console.log("🚀 ~ data", data)
-  const [updateListOrder] = useUpdateListOrderMutation()
-  const [updateIssueOrder] = useUpdateIssueOrderMutation()
-
-  const onDragEnd = (result: DropResult) => {
-    if (!isPositionChanged(result)) return
-    if (result.type === "LISTS") {
-      updateListOrder({
-        variables: {
-          options: {
-            id: Number(result.draggableId),
-            order: result.destination!.index + 1,
-          },
-        },
-        update: (cache) => updateCachedListOrder(cache, result, projectId),
-      })
-    }
-    if (result.type === "ISSUES") {
-      updateIssueOrder({
-        variables: {
-          options: {
-            id: Number(result.draggableId),
-            order: result.destination!.index + 1,
-          },
-        },
-        update: (cache) => updateCachedIssueOrder(cache, result, projectId),
-      })
-    }
-  }
+  const onDragEnd = useDragContext()
 
   if (loading) return <ListsSkeleton />
 
@@ -65,7 +29,7 @@ const ListsContainer: React.FC = () => {
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={(result) => onDragEnd(result, projectId)}>
       <Droppable
         droppableId={projectId.toString()}
         type="LISTS"
@@ -95,7 +59,7 @@ const ListsContainer: React.FC = () => {
               {[...data.lists]
                 .sort((a, b) => (a.order > b.order ? 1 : -1))
                 .map((list) => (
-                  <List key={list.id} list={list} />
+                  <List key={list.id} list={list} issues={list.issues} />
                 ))}
               {provided.placeholder}
             </Flex>

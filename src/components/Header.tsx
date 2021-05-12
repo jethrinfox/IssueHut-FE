@@ -56,11 +56,6 @@ const Header: FC = ({ props }) => {
       >
         <Flex align="center" justify="space-between">
           <MenuItems>Welcome {data?.me?.username}</MenuItems>
-          <Link mr={4} href="/projects/add">
-            <Button bg="transparent" border="1px">
-              Create Project
-            </Button>
-          </Link>
           <Button
             onClick={() => handleLogout()}
             bg="transparent"

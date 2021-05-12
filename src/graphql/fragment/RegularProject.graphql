@@ -1,0 +1,8 @@
+fragment RegularProject on Project {
+  id
+  name
+  description
+  createdAt
+  updatedAt
+  ownerId
+}
