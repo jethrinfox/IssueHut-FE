@@ -1,4 +1,4 @@
-import { ChakraProvider, CSSReset } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
 import theme from "../utils/theme"
 import withApollo from "../utils/withApollo"
 import Head from "next/head"
@@ -10,8 +10,7 @@ function MyApp({ Component, pageProps }: any) {
         <title>IssueHut ⛺</title>
         <meta property="og:title" content="IssueHut ⛺" key="title" />
       </Head>
-      <ChakraProvider theme={theme}>
-        <CSSReset />
+      <ChakraProvider resetCSS theme={theme}>
         <Component {...pageProps} />
       </ChakraProvider>
     </>
