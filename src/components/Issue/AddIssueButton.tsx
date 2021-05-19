@@ -11,14 +11,10 @@ import {
 } from "../../generated/graphql"
 
 interface AddIssueButtonProps {
-  projectId: number
   listId: number
 }
 
-const AddIssueButton: React.FC<AddIssueButtonProps> = ({
-  listId,
-  projectId,
-}) => {
+const AddIssueButton: React.FC<AddIssueButtonProps> = ({ listId }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState("")
   const [createIssue] = useCreateIssueMutation()
